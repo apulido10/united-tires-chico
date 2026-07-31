@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import rimAndBanner from "../public/rimandbanner.jpg";
@@ -25,12 +26,25 @@ const brands = [
   "Kumho", "General", "Nexen", "Pirelli",
 ];
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+const SITE = "https://unitedtireschico.com";
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "AutoRepair",
+  "@id": `${SITE}/#shop`,
   name: "United Tires and Wheels",
-  image: "https://unitedtireschico.com/unitedlogo.png",
+  url: SITE,
+  image: `${SITE}/unitedlogo.png`,
+  logo: `${SITE}/unitedlogo.png`,
+  description:
+    "New and used tires, wheels, alignment, brakes, suspension, and oil changes in Chico, CA. Straight prices, walk-ins welcome.",
   telephone: "+15308091976",
+  email: "hello@unitedtireschico.com",
+  hasMap: "https://maps.google.com/?q=2246+Esplanade+Chico+CA+95926",
   address: {
     "@type": "PostalAddress",
     streetAddress: "2246 Esplanade",
@@ -52,9 +66,23 @@ const jsonLd = {
       opens: "08:30",
       closes: "14:00",
     },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Sunday",
+      opens: "00:00",
+      closes: "00:00",
+    },
   ],
   areaServed: ["Chico", "Paradise", "Oroville", "Durham", "Butte County"],
   priceRange: "$$",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Services",
+    itemListElement: services.map((s) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: s.title, description: s.body },
+    })),
+  },
 };
 
 export default function Home() {
@@ -62,7 +90,9 @@ export default function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">

@@ -4,9 +4,23 @@ import shopPic from "../../public/Shoppic.jpg";
 import { SectionKicker } from "../components/SectionKicker";
 import { ContactForm } from "./ContactForm";
 
+// `title` is run through the root layout's "%s · United Tires and Wheels"
+// template, so it must not repeat the shop name.
 export const metadata: Metadata = {
-  title: "Contact · United Tires and Wheels",
-  description: "Get a quote or find the shop. Chico, CA.",
+  title: "Contact",
+  description:
+    "Get a tire or repair quote from United Tires and Wheels at 2246 Esplanade, Chico, CA. Call (530) 809-1976 — walk-ins welcome, no appointment needed for tires and flats.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact United Tires and Wheels — Chico, CA",
+    description:
+      "Get a quote or find the shop. 2246 Esplanade, Chico, CA. Call (530) 809-1976.",
+    url: "https://unitedtireschico.com/contact",
+    type: "website",
+    // Overriding `openGraph` here drops the root segment's file-based
+    // opengraph-image, so it has to be named again explicitly.
+    images: [{ url: "/opengraph-image.jpg", width: 1200, height: 630 }],
+  },
 };
 
 export default function ContactPage() {

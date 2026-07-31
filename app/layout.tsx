@@ -40,6 +40,22 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "United Tires and Wheels — Chico, CA",
+    description:
+      "New and used tires, wheels, alignment, brakes, and oil changes in Chico. Straight prices, walk-ins welcome.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
