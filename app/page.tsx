@@ -7,7 +7,6 @@ import shopPic from "../public/Shoppic.jpg";
 import tires from "../public/tires.jpg";
 import { BrandsMarquee } from "./components/BrandsMarquee";
 import { SectionKicker } from "./components/SectionKicker";
-
 const services = [
   { title: "New & used tires", body: "Passenger, truck, SUV, and trailer. All major brands." },
   { title: "Alignment", body: "Four-wheel with printed before/after specs." },
