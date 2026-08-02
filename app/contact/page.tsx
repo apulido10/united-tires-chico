@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import shopPic from "../../public/Shoppic.jpg";
 import { SectionKicker } from "../components/SectionKicker";
+import { HOURS_ROWS } from "../lib/hours";
 import { ContactForm } from "./ContactForm";
 
 // `title` is run through the root layout's "%s · United Tires and Wheels"
@@ -112,18 +113,14 @@ export default function ContactPage() {
                 Hours
               </h3>
               <ul className="mt-3 space-y-2 text-sm text-[color:var(--muted)]">
-                <li className="flex justify-between gap-8">
-                  <span>Mon – Fri</span>
-                  <span className="text-white">8:30 AM – 5 PM</span>
-                </li>
-                <li className="flex justify-between gap-8">
-                  <span>Saturday</span>
-                  <span className="text-white">8:30 AM – 2 PM</span>
-                </li>
-                <li className="flex justify-between gap-8">
-                  <span>Sunday</span>
-                  <span>Closed</span>
-                </li>
+                {HOURS_ROWS.map((row) => (
+                  <li key={row.label} className="flex justify-between gap-8">
+                    <span>{row.label}</span>
+                    <span className={row.closed ? undefined : "text-white"}>
+                      {row.hours}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </div>
           </aside>

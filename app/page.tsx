@@ -7,6 +7,8 @@ import shopPic from "../public/Shoppic.jpg";
 import tires from "../public/tires.jpg";
 import { BrandsMarquee } from "./components/BrandsMarquee";
 import { SectionKicker } from "./components/SectionKicker";
+import { ShopStatus } from "./components/ShopStatus";
+import { HOURS_ROWS, openingHoursSpecification } from "./lib/hours";
 const services = [
   { title: "New & used tires", body: "Passenger, truck, SUV, and trailer. All major brands." },
   { title: "Alignment", body: "Four-wheel with printed before/after specs." },
@@ -52,26 +54,7 @@ const jsonLd = {
     postalCode: "95926",
     addressCountry: "US",
   },
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "08:30",
-      closes: "17:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Saturday",
-      opens: "08:30",
-      closes: "14:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: "Sunday",
-      opens: "00:00",
-      closes: "00:00",
-    },
-  ],
+  openingHoursSpecification,
   areaServed: ["Chico", "Paradise", "Oroville", "Durham", "Butte County"],
   priceRange: "$$",
   hasOfferCatalog: {
@@ -117,7 +100,7 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[color:var(--brand)]" />
             <p className="text-xs font-medium uppercase tracking-widest text-[color:var(--brand)] sm:text-sm">
-              Open today · 8:30 – 5 · Chico, CA
+              <ShopStatus /> · Chico, CA
             </p>
           </div>
           <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-7xl">
@@ -353,18 +336,14 @@ export default function Home() {
                 Hours
               </h3>
               <ul className="mt-3 space-y-2 text-sm text-[color:var(--muted)]">
-                <li className="flex justify-between gap-6">
-                  <span>Mon – Fri</span>
-                  <span className="text-white">8:30 AM – 5 PM</span>
-                </li>
-                <li className="flex justify-between gap-6">
-                  <span>Saturday</span>
-                  <span className="text-white">8:30 AM – 2 PM</span>
-                </li>
-                <li className="flex justify-between gap-6">
-                  <span>Sunday</span>
-                  <span>Closed</span>
-                </li>
+                {HOURS_ROWS.map((row) => (
+                  <li key={row.label} className="flex justify-between gap-6">
+                    <span>{row.label}</span>
+                    <span className={row.closed ? undefined : "text-white"}>
+                      {row.hours}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

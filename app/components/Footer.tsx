@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HOURS_ROWS } from "../lib/hours";
 
 export function Footer() {
   return (
@@ -21,18 +22,14 @@ export function Footer() {
           </a>
         </div>
         <div className="text-sm text-[color:var(--muted)]">
-          <div className="flex justify-between">
-            <span>Mon – Fri</span>
-            <span className="text-white">8:30 – 5</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Saturday</span>
-            <span className="text-white">8:30 – 2</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Sunday</span>
-            <span>Closed</span>
-          </div>
+          {HOURS_ROWS.map((row) => (
+            <div key={row.label} className="flex justify-between">
+              <span>{row.label}</span>
+              <span className={row.closed ? undefined : "text-white"}>
+                {row.hoursShort}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
       <div className="border-t border-[color:var(--border)]">
