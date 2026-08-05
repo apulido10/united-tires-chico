@@ -40,6 +40,8 @@ export function Footer() {
             <Link href="/#services" className="hover:text-white">Services</Link>
             <Link href="/#visit" className="hover:text-white">Visit</Link>
             <Link href="/contact" className="hover:text-white">Contact</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
           </div>
         </div>
       </div>

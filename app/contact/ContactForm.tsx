@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useRef, useEffect } from "react";
 import { submitContact, type ContactState } from "./submit-contact";
 
@@ -78,6 +79,15 @@ export function ContactForm() {
           {state.message}
         </p>
       )}
+
+      <p className="mt-4 text-xs leading-5 text-[color:var(--muted)]">
+        By sending this, you agree we may contact you about your request. See
+        our{" "}
+        <Link href="/privacy" className="text-white underline-offset-4 hover:underline">
+          Privacy Policy
+        </Link>
+        .
+      </p>
 
       <p className="mt-3 text-xs text-[color:var(--muted)]">
         Prefer to text?{" "}
