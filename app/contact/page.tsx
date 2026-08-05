@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Contact United Tires and Wheels — Chico, CA",
     description:
       "Get a quote or find the shop. 2246 Esplanade, Chico, CA. Call (530) 809-1976.",
-    url: "https://unitedtireschico.com/contact",
+    url: "https://www.unitedtiresandwheels.com/contact",
     type: "website",
     // Overriding `openGraph` here drops the root segment's file-based
     // opengraph-image, so it has to be named again explicitly.

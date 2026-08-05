@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const SITE = "https://unitedtireschico.com";
+const SITE = "https://www.unitedtiresandwheels.com";
 
 const jsonLd = {
   "@context": "https://schema.org",

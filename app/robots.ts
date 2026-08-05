@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://unitedtireschico.com/sitemap.xml",
-    host: "https://unitedtireschico.com",
+    sitemap: "https://www.unitedtiresandwheels.com/sitemap.xml",
+    host: "https://www.unitedtiresandwheels.com",
   };
 }

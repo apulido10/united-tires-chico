@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://unitedtireschico.com"),
+  metadataBase: new URL("https://www.unitedtiresandwheels.com"),
   title: {
     default: "United Tires and Wheels — Chico, CA",
     template: "%s · United Tires and Wheels",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "United Tires and Wheels — Chico, CA",
     description:
       "New and used tires, wheels, alignment, brakes, and oil changes in Chico. Straight prices, walk-ins welcome.",
-    url: "https://unitedtireschico.com",
+    url: "https://www.unitedtiresandwheels.com",
     siteName: "United Tires and Wheels",
     locale: "en_US",
     type: "website",
