@@ -1,16 +1,17 @@
 "use server";
 
-import nodemailer from "nodemailer";
-
 export type ContactState =
   | { status: "idle" }
   | { status: "success" }
   | { status: "error"; message: string };
 
-const escapeHtml = (s: string) =>
-  s.replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)
-  );
+// FormSubmit relays the form to this inbox — no SMTP credentials needed.
+// The address must confirm the one-time activation email before the first
+// real submission goes through. Override locally to test against your own inbox.
+const RECIPIENT = process.env.CONTACT_FORM_EMAIL ?? "utwchico@gmail.com";
+const ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(RECIPIENT)}`;
+
+const PHONE_FALLBACK = "Please call (530) 809-1976.";
 
 export async function sendContact(
   _prev: ContactState,
@@ -36,58 +37,46 @@ export async function sendContact(
     return { status: "error", message: "That email address looks off — mind double-checking?" };
   }
 
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  const to = process.env.MAIL_TO;
-
-  if (!user || !pass || !to) {
-    console.error("Contact form: missing env vars (GMAIL_USER / GMAIL_APP_PASSWORD / MAIL_TO)");
-    return {
-      status: "error",
-      message: "Email isn't set up yet. Please call us at (530) 809-1976.",
-    };
-  }
-
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user, pass },
-  });
-
-  const html = `
-    <h2 style="margin:0 0 12px;font-family:system-ui,sans-serif;">New quote request</h2>
-    <table style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px;">
-      <tr><td style="padding:4px 12px 4px 0;color:#666;">Name</td><td>${escapeHtml(name)}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666;">Phone</td><td>${escapeHtml(phone) || "—"}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666;">Email</td><td>${escapeHtml(email) || "—"}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#666;">Vehicle</td><td>${escapeHtml(vehicle) || "—"}</td></tr>
-    </table>
-    <p style="margin:16px 0 4px;color:#666;font-family:system-ui,sans-serif;font-size:14px;">Message</p>
-    <pre style="white-space:pre-wrap;font-family:system-ui,sans-serif;font-size:14px;margin:0;">${escapeHtml(message)}</pre>
-  `;
-
-  const text =
-    `New quote request\n\n` +
-    `Name: ${name}\n` +
-    `Phone: ${phone || "—"}\n` +
-    `Email: ${email || "—"}\n` +
-    `Vehicle: ${vehicle || "—"}\n\n` +
-    `Message:\n${message}\n`;
-
   try {
-    await transporter.sendMail({
-      from: `"United Tires and Wheels" <${user}>`,
-      to,
-      replyTo: email || undefined,
-      subject: `Quote request from ${name}`,
-      text,
-      html,
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        Name: name,
+        Phone: phone || "—",
+        Email: email || "—",
+        Vehicle: vehicle || "—",
+        Message: message,
+        _subject: `Quote request from ${name}`,
+        _template: "table",
+        // Replying to the notification reaches the customer directly.
+        _replyto: email || undefined,
+        // Required for the AJAX endpoint — the captcha page can't be shown here.
+        _captcha: "false",
+      }),
+      signal: AbortSignal.timeout(15_000),
     });
+
+    const body = await res.json().catch(() => null);
+    const ok = res.ok && String(body?.success) === "true";
+
+    if (!ok) {
+      console.error("Contact form: FormSubmit rejected the submission", res.status, body);
+      return {
+        status: "error",
+        message: `Something went wrong sending your message. ${PHONE_FALLBACK}`,
+      };
+    }
+
     return { status: "success" };
   } catch (err) {
-    console.error("Contact form: sendMail failed", err);
+    console.error("Contact form: request to FormSubmit failed", err);
     return {
       status: "error",
-      message: "Something went wrong sending your message. Please call (530) 809-1976.",
+      message: `Something went wrong sending your message. ${PHONE_FALLBACK}`,
     };
   }
 }
