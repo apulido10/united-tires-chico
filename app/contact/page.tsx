@@ -100,10 +100,10 @@ export default function ContactPage() {
                 (530) 809-1976
               </a>
               <a
-                href="mailto:hello@unitedtireschico.com"
+                href="mailto:utwchico@gmail.com"
                 className="mt-1 block text-sm text-[color:var(--muted)] hover:text-white"
               >
-                hello@unitedtireschico.com
+                utwchico@gmail.com
               </a>
             </div>
 

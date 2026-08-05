@@ -44,7 +44,7 @@ const jsonLd = {
   description:
     "New and used tires, wheels, alignment, brakes, suspension, and oil changes in Chico, CA. Straight prices, walk-ins welcome.",
   telephone: "+15308091976",
-  email: "hello@unitedtireschico.com",
+  email: "utwchico@gmail.com",
   hasMap: "https://maps.google.com/?q=2246+Esplanade+Chico+CA+95926",
   address: {
     "@type": "PostalAddress",
