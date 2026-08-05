@@ -16,7 +16,7 @@ const ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(TARGET)}`;
 // This request is made server-side, so it carries no Origin/Referer of its own.
 // Without them FormSubmit assumes the form was opened as a local file and
 // rejects the submission, so identify the site explicitly.
-const SITE = "https://unitedtireschico.com";
+const SITE = "https://www.unitedtiresandwheels.com";
 
 const PHONE_FALLBACK = "Please call (530) 809-1976.";
 
