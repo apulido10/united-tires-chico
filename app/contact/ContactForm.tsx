@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState, useRef, useEffect } from "react";
-import { sendContact, type ContactState } from "../actions/send-contact";
+import { submitContact, type ContactState } from "./submit-contact";
 
 const initialState: ContactState = { status: "idle" };
 
 export function ContactForm() {
-  const [state, action, pending] = useActionState(sendContact, initialState);
+  const [state, action, pending] = useActionState(submitContact, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

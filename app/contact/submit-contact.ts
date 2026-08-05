@@ -1,26 +1,19 @@
-"use server";
+// Runs in the browser, not on the server. FormSubmit is behind Cloudflare,
+// which serves a 403 challenge page to requests from datacenter IPs — so the
+// same call made from a Vercel function is blocked while a real visitor's
+// browser passes straight through. Submitting client-side also means the
+// browser supplies Origin and Referer itself, which FormSubmit requires.
 
 export type ContactState =
   | { status: "idle" }
   | { status: "success" }
   | { status: "error"; message: string };
 
-// FormSubmit relays the form to the shop inbox — no SMTP credentials needed.
-// This is FormSubmit's alias for that inbox rather than the address itself, so
-// the destination isn't sitting in the request for scrapers to pick up.
-// Set CONTACT_FORM_EMAIL to a plain address to test against a different inbox;
-// any new address has to confirm its own activation email before it receives.
-const TARGET = process.env.CONTACT_FORM_EMAIL ?? "497c16e3c806f878e2ef29e9d75c9d4e";
-const ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(TARGET)}`;
-
-// This request is made server-side, so it carries no Origin/Referer of its own.
-// Without them FormSubmit assumes the form was opened as a local file and
-// rejects the submission, so identify the site explicitly.
-const SITE = "https://www.unitedtiresandwheels.com";
+const ENDPOINT = "https://formsubmit.co/ajax/497c16e3c806f878e2ef29e9d75c9d4e";
 
 const PHONE_FALLBACK = "Please call (530) 809-1976.";
 
-export async function sendContact(
+export async function submitContact(
   _prev: ContactState,
   formData: FormData,
 ): Promise<ContactState> {
@@ -50,8 +43,6 @@ export async function sendContact(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: SITE,
-        Referer: `${SITE}/contact`,
       },
       body: JSON.stringify({
         Name: name,
@@ -69,20 +60,11 @@ export async function sendContact(
       signal: AbortSignal.timeout(15_000),
     });
 
+    // FormSubmit answers 200 with success:"false" on rejection, so the body
+    // has to be checked rather than the status alone.
     const body = await res.json().catch(() => null);
-    const ok = res.ok && String(body?.success) === "true";
-
-    if (!ok) {
-      // Until the recipient clicks FormSubmit's activation link, every
-      // submission bounces with this. It resolves itself once, on setup.
-      if (String(body?.message ?? "").toLowerCase().includes("activation")) {
-        console.error(
-          `Contact form: ${TARGET} has not activated FormSubmit yet. ` +
-            `An 'Activate Form' link was emailed to that inbox — click it, then resubmit.`,
-        );
-      } else {
-        console.error("Contact form: FormSubmit rejected the submission", res.status, body);
-      }
+    if (!res.ok || String(body?.success) !== "true") {
+      console.error("Contact form: FormSubmit rejected the submission", res.status, body);
       return {
         status: "error",
         message: `Something went wrong sending your message. ${PHONE_FALLBACK}`,
